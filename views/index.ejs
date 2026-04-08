@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do List</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 To-Do List</h1>
+      <a href="/tasks/new" class="btn btn-primary">+ New Task</a>
+    </header>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <% if (tasks.length === 0) { %>
+      <p class="empty-state">No tasks yet. Create one!</p>
+    <% } else { %>
+      <ul class="task-list">
+        <% tasks.forEach(task => { %>
+          <li class="task-item <%= task.completed ? 'completed' : '' %>">
+            <div class="task-info">
+              <h3><%= task.title %></h3>
+              <% if (task.description) { %>
+                <p><%= task.description %></p>
+              <% } %>
+              <div class="task-meta">
+                <% if (task.category) { %>
+                  <span class="badge"><%= task.category %></span>
+                <% } %>
+                <% if (task.dueDate) { %>
+                  <span class="due-date">Due: <%= task.dueDate.toLocaleDateString() %></span>
+                <% } %>
+                <span class="status <%= task.completed ? 'status-done' : 'status-pending' %>">
+                  <%= task.completed ? 'Completed' : 'Pending' %>
+                </span>
+              </div>
+            </div>
+            <div class="task-actions">
+              <% if (!task.completed) { %>
+                <form action="/tasks/<%= task._id %>/complete?_method=PATCH" method="POST" style="display:inline">
+                  <button type="submit" class="btn btn-success">✓ Complete</button>
+                </form>
+              <% } %>
+              <a href="/tasks/<%= task._id %>/edit" class="btn btn-secondary">Edit</a>
+              <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display:inline"
+                    onsubmit="return confirm('Delete this task?')">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </div>
+</body>
+</html>

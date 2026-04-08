@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= task ? 'Edit Task' : 'New Task' %> | To-Do List</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><%= task ? '✏️ Edit Task' : '➕ New Task' %></h1>
+      <a href="/tasks" class="btn btn-secondary">← Back</a>
+    </header>
+
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-error">
+        <ul>
+          <% errors.forEach(e => { %><li><%= e.msg %></li><% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="<%= formAction %>" method="<%= method %>" class="task-form">
+      <div class="form-group">
+        <label for="title">Title <span class="required">*</span></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value="<%= task ? task.title : '' %>"
+          placeholder="Enter task title"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" placeholder="Enter task description"><%= task ? task.description : '' %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input
+          type="text"
+          id="category"
+          name="category"
+          value="<%= task ? task.category : '' %>"
+          placeholder="e.g. Work, Personal"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input
+          type="date"
+          id="dueDate"
+          name="dueDate"
+          value="<%= task && task.dueDate ? task.dueDate.toISOString().split('T')[0] : '' %>"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <%= task ? 'Save Changes' : 'Create Task' %>
+      </button>
+    </form>
+  </div>
+</body>
+</html>
