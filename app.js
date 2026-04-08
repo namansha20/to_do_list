@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const path = require('path');
 
+const rateLimit = require('express-rate-limit');
 const taskRoutes = require('./routes/tasks');
 
 const app = express();
@@ -19,6 +20,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests, please try again later.',
+});
+app.use('/tasks', limiter);
 
 // Routes
 app.get('/', (req, res) => res.redirect('/tasks'));
